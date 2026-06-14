@@ -127,9 +127,10 @@ void mul256b(u256 *x, u256 *y, u256 *tmp_struc_ptr) {
 
    /*********************** WARNING WARNING WARNING ***********************
    *                                                                      *
-   *   m2 = m1; implicitly masks the upper bits, storing only the         *
+   *   m2 = m1; implicitly  masks the upper bits,  storing only the       *
    *   low 64-bits in m2. The carry remains in the high bits of m1,       *
-   *   used to calc the u128 hi struct member value.                      *
+   *   used to calc  u128 hi struct  member value. Implemented this       *
+   *   way for possible compiler efficiency.                              *
    *                                                                      *
    *   This is the same as u64 m2 = m1 & 0xFFFFFFFFFFFFFFFFULL;           *
    *                                                                      *
