@@ -1,6 +1,6 @@
-/* dev256.c on local git branch dev256.      10/23/25 
+/* dev256.c on local git branch dev256.      10/23/25
  *
- * Program prints the product of two (spc seperated) unsigned decimal strings 
+ * Program prints the product of two (spc separated) unsigned decimal strings
  * given by user as cmdln_args. Args can represent values 0 to (2^128)-1.
  *
  * Example run with output:
@@ -10,13 +10,23 @@
  * Product: 121932631112635269
  *
  *
- * Formula to build 256 bit result:
+ * The 256-bit result is stored in a u256 struct with three fields:
  *
- *  -----  high 128 bits  ------      --- low 128 bits ---
- * (((hihi << 64) + hilo) << 128)  +  (lohi << 64) + lolo
+ *   hi  (u128) -- bits 255..128   split into: hihi (bits 255..192)
+ *                                             hilo (bits 191..128)
+ *   mid (u64)  -- bits 127..64    printed as: lohi
+ *   lo  (u64)  -- bits  63..0     printed as: lolo
  *
+ * Formula to reconstruct the full 256-bit product from those four 64-bit limbs:
+ *
+ *  --------- high 128 bits ----------      ----- low 128 bits -----
+ *  (((hihi << 64) + hilo) << 128)      +   (lohi << 64) + lolo
+ *
+ *  (where << N means multiply by 2^N)
+ *
+ * Sample output for the example above (small result fits in lolo only):
  * hihi: 0, hilo: 0, lohi: 0, lolo: 121932631112635269
- * 
+ *
  *
  * build with: gcc -gdwarf-5 -Wall -Wextra -std=c99 -m64 -o exec source
  */
