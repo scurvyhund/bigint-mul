@@ -91,8 +91,10 @@ void array_multiply(const int8_t* array_1, const int8_t* array_2,
    // i*j iterations. 'i' (multiplier index), 'j' (multiplicand index).
    for(int i = array_1_length - 1; i >= 0; i--) {
 
-      // shl_1++ shifts 'k' to next higher base 10 column for each product
-      // row as each digit of the multiplier traverses the multiplicand.
+      // k: starting write index for this partial-product row in product_array.
+      // shl_1 shifts k one column left per multiplier digit, mirroring the
+      // left-shift of each row in grade-school long multiplication. Within
+      // each row, k-- steps left through the multiplicand digits.
       int k = product_length - 1 - shl_1++;
 
       int j = array_2_length - 1;
