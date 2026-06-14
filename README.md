@@ -53,10 +53,18 @@ $ ./big-mul 0 99999
 extension to work in 64-bit limbs, avoiding any string arithmetic in the
 multiply itself.
 
-**How it works:** each 128-bit input is split into two 64-bit halves. Four
-64×64→128 products are computed and their partial results are combined with
-explicit carry propagation into a `u256` struct (lo: 64-bit, mid: 64-bit,
-hi: 128-bit). The result is then converted to a decimal string for output.
+**How it works:** each 128-bit input is split into two 64-bit halves using
+type casts and bit shifts (`>> 64` to extract the high half, `(u64)` cast to
+isolate the low half). Four 64×64→128 partial products are computed using
+`__uint128_t` casts, and carries between limbs are propagated the same way —
+bit shifts and casts isolate the high and low 64 bits at each stage. The
+final result is assembled into a `u256` struct (lo: 64-bit, mid: 64-bit,
+hi: 128-bit).
+
+The decimal conversion works digit by digit: the 256-bit value is
+repeatedly divided by 10, with the remainder cascading down through
+`hi → mid → lo` on each iteration to extract one decimal digit at a time.
+Digits are collected least-significant-first then reversed for printing.
 
 **Input limit:** each factor must be ≤ (2^128)-1 =
 `340282366920938463463374607431768211455`. The product can reach (2^256)-1.
