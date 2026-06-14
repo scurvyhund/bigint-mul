@@ -91,8 +91,26 @@ Requires GCC with `__uint128_t` support (any modern x86-64 GCC).
 $ ./dev256 123456789 987654321
 Product: 121932631112635269
 
+	 * Formula to build 256 bit result:
+	 *
+
+hihi: 0, hilo: 0, lohi: 0, lolo: 121932631112635269
+
+	 *  -----  high 128 bits  ------      --- low 128 bits ---
+	 * (((hihi << 64) + hilo) << 128)  +  (lohi << 64) + lolo
+	 *
+
 $ ./dev256 340282366920938463463374607431768211455 340282366920938463463374607431768211455
 Product: 115792089237316195423570985008687907852589419931798687112530834793049593217025
+
+	 * Formula to build 256 bit result:
+	 *
+
+hihi: 18446744073709551615, hilo: 18446744073709551614, lohi: 0, lolo: 1
+
+	 *  -----  high 128 bits  ------      --- low 128 bits ---
+	 * (((hihi << 64) + hilo) << 128)  +  (lohi << 64) + lolo
+	 *
 ```
 
 ---
