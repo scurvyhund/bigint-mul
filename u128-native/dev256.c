@@ -244,16 +244,15 @@ int main(int argc, char** argv) {
    free(product_str);
     
    // Print partial values and Formula to construct Product values...
-   puts("\n\t *\n\t * Formula to build 256 bit result:\n\t *\
-       \n\t *  -----  high 128 bits  ------      --- low 128 bits ---\
-       \n\t * (((hihi << 64) + hilo) << 128)  +  (lohi << 64) + lolo\
-       \n\t *");
-
    u64 hihi = tmp.hi >> 64;
    u64 hilo = (u64)tmp.hi;
 
+   puts("\n\t * Formula to build 256 bit result:\n\t *");
    printf("\nhihi: %llu, hilo: %llu, lohi: %llu, lolo: %llu\n\n", hihi, hilo,\
          tmp.mid, tmp.lo);
+   puts("\t *  -----  high 128 bits  ------      --- low 128 bits ---\
+\n\t * (((hihi << 64) + hilo) << 128)  +  (lohi << 64) + lolo\
+\n\t *");
 
    return 0;
 }
