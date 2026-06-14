@@ -28,8 +28,14 @@
  * Sample output for the example above (small result fits in lolo only):
  * hihi: 0, hilo: 0, lohi: 0, lolo: 121932631112635269
  *
- * Large input sample:
+ * Large input sample (both factors at MAX_128 = (2^128)-1):
  *
+ * $> ./dev256 340282366920938463463374607431768211455 \
+ *             340282366920938463463374607431768211455
+ *
+ * Product: 115792089237316195423570985008687907852589419931798687112530834793049593217025
+ *
+ * hihi: 18446744073709551615, hilo: 18446744073709551614, lohi: 0, lolo: 1
  *
  * build with: gcc -gdwarf-5 -Wall -Wextra -std=c99 -m64 -o exec source
  */
