@@ -125,7 +125,12 @@ void mul256b(u256 *x, u256 *y, u256 *tmp_struc_ptr) {
    // high 64-bits t1 + low 64-bits of t2.
    u128 m1 = (t1 >> 64) + (u64)t2;
 
+   /* 
+    * !!! m2 = m1 implicitly masking and extracting the carry with this 
+    * 'silent cast' !!!
+    */
    u64 m2 = m1;  // m2 <- low 64 bits of m1; high bits of m1 become carry
+   
    u128 mid = (u128)m2 + (u64)t3;
     
    u128 hi = (t2 >> 64) + (t3 >> 64) + t4 + (m1 >> 64) + (mid >> 64);
