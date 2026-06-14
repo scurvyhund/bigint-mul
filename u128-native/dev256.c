@@ -14,18 +14,21 @@
  *
  *   hi  (u128) -- bits 255..128   split into: hihi (bits 255..192)
  *                                             hilo (bits 191..128)
+ *
  *   mid (u64)  -- bits 127..64    printed as: lohi
  *   lo  (u64)  -- bits  63..0     printed as: lolo
  *
  * Formula to reconstruct the full 256-bit product from those four 64-bit limbs:
  *
- *  --------- high 128 bits ----------      ----- low 128 bits -----
- *  (((hihi << 64) + hilo) << 128)      +   (lohi << 64) + lolo
+ *  --------- high 128 bits ----------+----- low 128 bits -----
+ *  (((hihi << 64) + hilo) << 128)    +   (lohi << 64) + lolo
  *
  *  (where << N means multiply by 2^N)
  *
  * Sample output for the example above (small result fits in lolo only):
  * hihi: 0, hilo: 0, lohi: 0, lolo: 121932631112635269
+ *
+ * Large input sample:
  *
  *
  * build with: gcc -gdwarf-5 -Wall -Wextra -std=c99 -m64 -o exec source
