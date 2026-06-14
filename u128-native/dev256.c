@@ -1,4 +1,4 @@
-/* dev256.c on local git branch dev256.      10/23/25
+/* dev256.c      10/23/25
  *
  * Program prints the product of two (spc separated) unsigned decimal strings
  * given by user as cmdln_args. Args can represent values 0 to (2^128)-1.
@@ -113,21 +113,19 @@ static u128 string_to_u128(const char *str) {
 
 void mul256b(u256 *x, u256 *y, u256 *tmp_struc_ptr) {
 
-   /* Local variables assigned values calced with ptr (x, and y) to main()
-    * structs binum1 and bignum2.
-    */
+   /* Four partial products: each 64-bit half of x times each 64-bit half of y */
    u128 t1 = (u128)x->lo * y->lo;
    u128 t2 = (u128)x->lo * y->mid;
    u128 t3 = (u128)x->mid * y->lo;
    u128 t4 = (u128)x->mid * y->mid;
 
-   // lo 64 bits of t1 (1) -> lo.
+   // lo 64 bits of t1 -> product lo word.
    u64 lo = t1;
 
-   // hi 64 bits t1 ((2^64)-2)  + low 64 bits t2.
+   // high 64-bits t1 + low 64-bits of t2.
    u128 m1 = (t1 >> 64) + (u64)t2;
 
-   u64 m2 = m1;  
+   u64 m2 = m1;  // m2 <- low 64 bits of m1; high bits of m1 become carry
    u128 mid = (u128)m2 + (u64)t3;
     
    u128 hi = (t2 >> 64) + (t3 >> 64) + t4 + (m1 >> 64) + (mid >> 64);
@@ -157,8 +155,7 @@ char* u256_to_string(u256* tmp_struc_ptr) {
       return digits;
     }
 
-   // Branchless version - replaced if block...
-   // Only skips if ALL are zero...    
+   // Only skips if ALL are zero...
    size_t digit_count = 0;
    while (hi != 0 || mid != 0 || lo != 0) {
       
@@ -235,7 +232,7 @@ int main(int argc, char** argv) {
    y->lo = (u64)y_int;
    y->mid = y_int >> 64;
 
-   // Pass empty struc to hold final values loded in and ret'd from mul256b.
+   // Pass empty struct to hold final values loaded in and ret'd from mul256b.
    u256 tmp = {0};
    mul256b(x, y, &tmp);
    
