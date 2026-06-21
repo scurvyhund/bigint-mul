@@ -1,7 +1,9 @@
-# bigint-mul
+# bigint-mul — Arbitrary-Precision Big Integer Multiplication in C
 
-Two implementations of large integer multiplication in C, each demonstrating
-a different approach to the same problem.
+Two implementations of **arbitrary-precision big integer multiplication**
+in C, each demonstrating a different approach: one with no compiled-in
+limit on input size (pure string arithmetic), one computing a full
+256-bit product from 128-bit inputs using GCC's `__uint128_t`.
 
 ---
 
@@ -124,6 +126,20 @@ hihi: 18446744073709551615, hilo: 18446744073709551614, lohi: 0, lolo: 1
 | Algorithm | string long multiplication | 64-bit limb multiply |
 | Dependencies | C99 standard library | GCC `__uint128_t` (x86-64) |
 | Speed | O(n²) in digit count | O(1) fixed-width |
+
+## Related projects
+
+Big integer arithmetic like this underpins the BigFermat prime search:
+
+- [bi-quad](https://github.com/scurvyhund/bi-quad) — exhaustive hunt for
+  bi-quadratic emirps and prime palindromes on the curve 2n²+2n+1 (the
+  sum of two consecutive squares); uses GMP and `__uint128_t` for
+  arithmetic past the 64-bit wall.
+- [bigdec2hex](https://github.com/scurvyhund/bigdec2hex) — arbitrary-
+  precision decimal-to-hexadecimal converter; same string-arithmetic
+  approach as the schoolbook multiplier here.
+
+---
 
 ## Author
 
