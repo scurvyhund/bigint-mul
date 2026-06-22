@@ -26,7 +26,6 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
 #include <ctype.h>
@@ -65,7 +64,7 @@ int main(int argc, char* argv[]){
 
    int length_2 = strlen(argv[2]);
 
-   // array_2 will be multiplicand.
+   // array_2 will hold multiplicand digits.
    int8_t array_2[length_2];
 
    for(int i = 0; i < length_2; i++)
@@ -102,7 +101,7 @@ void array_multiply(const int8_t* array_1, const int8_t* array_2,
       while(j >= 0 || carry > 0) {
 
          if(j >= 0)
-            // Get prod. of 2 digits from factor 1 and factor 2.
+            // Get prod. of multiplier digit and multiplicand digit.
             tmp = array_1[i] * array_2[j];
          else
             tmp = 0;
