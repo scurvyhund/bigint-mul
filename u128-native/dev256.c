@@ -85,20 +85,20 @@ static int validate_cmdln_args(char* cmdln_arg) {
 }
 
 static int string_compare(const char *a, const char *b) {
-    // Skip leading zeros
-    while (*a == '0' && *(a + 1) != '\0') a++;
-    while (*b == '0' && *(b + 1) != '\0') b++;
+   // Skip leading zeros
+   while (*a == '0' && *(a + 1) != '\0') a++;
+   while (*b == '0' && *(b + 1) != '\0') b++;
 
-    size_t len_a = strlen(a);
-    size_t len_b = strlen(b);
+   size_t len_a = strlen(a);
+   size_t len_b = strlen(b);
 
-    // Different lengths = different magnitudes
-  if (len_a != len_b) {
-    return (len_a < len_b) ? -1 : 1;
-  }
+   // Different lengths = different magnitudes
+   if (len_a != len_b) {
+      return (len_a < len_b) ? -1 : 1;
+   }
 
-  // Same length, compare digit by digit
-  return strcmp(a, b);
+   // Same length, compare digit by digit
+   return strcmp(a, b);
 }
 
 static u128 string_to_u128(const char *str) {
