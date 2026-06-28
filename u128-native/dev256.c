@@ -150,11 +150,11 @@ void mul256b(u256 *x, u256 *y, u256 *tmp_struc_ptr) {
 // Converts large integers to printable strings, arg is &tmp.
 char* u256_to_string(u256* tmp_struc_ptr) {
 
-   // Heap memory for (Max digits in (2^256)+1)...digits used like
+   // Heap memory for (Max digits in (2^256)-1)...digits used like
    // an array.
    char* digits = malloc(79);
    
-   // init local varialbles with u256 tmp struct member values...
+   // init local variables with u256 tmp struct member values...
    u64 lo  = tmp_struc_ptr->lo;
    u64 mid = tmp_struc_ptr->mid;
    u128 hi = tmp_struc_ptr->hi;
@@ -187,7 +187,7 @@ char* u256_to_string(u256* tmp_struc_ptr) {
    // null terminator
    digits[digit_count] = '\0';
 
-   // load 
+   // Reverse the string (digits were extracted least-significant first)...
    for (size_t i = 0; i < digit_count / 2; i++) {
       char temp = digits[i];
 
@@ -216,7 +216,7 @@ int main(int argc, char** argv) {
       return 2;
    }
 
-   // Check cmdln_args and assign to varialbles
+   // Check cmdln_args and assign to variables
    char* x_str = argv[1];
    if (validate_cmdln_args(x_str))
       return 3;
