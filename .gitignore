@@ -1,6 +1,7 @@
 # build output
 schoolbook/big-mul
 u128-native/dev256
+u128-native/test_dev256
 
 # misc
 tags

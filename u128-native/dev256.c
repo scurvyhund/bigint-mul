@@ -122,12 +122,12 @@ void mul256b(u256 *x, u256 *y, u256 *tmp_struc_ptr) {
    // lo 64 bits of t1 -> product lo word.
    u64 lo = t1;
 
-   // high 64-bits t1 + low 64-bits of t2.
+   // high 64-bits of t1 + low 64-bits of t2.
    u128 m1 = (t1 >> 64) + (u64)t2;
 
    /*********************** WARNING WARNING WARNING ***********************
    *                                                                      *
-   *   m2 = m1; implicitly  masks the upper bits,  storing only the       *
+   *   m2 = m1; implicitly masks the upper bits, storing only the         *
    *   low 64-bits in m2. The carry remains in the high bits of m1,       *
    *   used to calc  u128 hi struct  member value. Implemented this       *
    *   way for possible compiler efficiency.                              *
@@ -135,7 +135,7 @@ void mul256b(u256 *x, u256 *y, u256 *tmp_struc_ptr) {
    *   This is the same as u64 m2 = m1 & 0xFFFFFFFFFFFFFFFFULL;           *
    *                                                                      *
    ***********************************************************************/
-   u64 m2 = m1;  // m2 <- low 64 bits of 128 bit variable m1.
+   u64 m2 = m1;  // m2 <- low 64 bits of m1; high bits become the carry
    
    u128 mid = (u128)m2 + (u64)t3;
     
@@ -154,7 +154,7 @@ char* u256_to_string(u256* tmp_struc_ptr) {
    // an array.
    char* digits = malloc(79);
    
-   // init local variables with u256 tmp struct member values...
+   // init local limb variables with u256 tmp struct member values...
    u64 lo  = tmp_struc_ptr->lo;
    u64 mid = tmp_struc_ptr->mid;
    u128 hi = tmp_struc_ptr->hi;
@@ -164,7 +164,7 @@ char* u256_to_string(u256* tmp_struc_ptr) {
       digits[0] = '0';
       digits[1] = '\0';
       return digits;
-    }
+   }
 
    // Only skips if ALL are zero...
    size_t digit_count = 0;
@@ -187,14 +187,15 @@ char* u256_to_string(u256* tmp_struc_ptr) {
    // null terminator
    digits[digit_count] = '\0';
 
-   // Reverse the string (digits were extracted least-significant first)...
+   // Reverse the digit string (LSB-first -> MSB-first)
    for (size_t i = 0; i < digit_count / 2; i++) {
       char temp = digits[i];
 
-      // start before null terminator...   
+      // start at index before null terminator...
       digits[i] = digits[digit_count - 1 - i];
       digits[digit_count - 1 - i] = temp;
    }
+   // Caller owns the heap block and must free() it
    return digits;
 }
 
@@ -208,8 +209,8 @@ int main(int argc, char** argv) {
       exit(1);
    }
 
-   // lt zero if arg[x] < MAX_128, eq if argv[x] == MAX_128 , gt zero if
-   // argv[x] > MAX_128 
+   // lt zero if argv[x] < MAX_128, eq if argv[x] == MAX_128, gt zero if
+   // argv[x] > MAX_128
    if ((string_compare(argv[1], MAX_128) > 0) || (string_compare(argv[2],\
         MAX_128) > 0)) {
       puts("\nERROR: Factor[s] exceeds MAX_128 value: ((2^128)-1) \n");
@@ -261,6 +262,16 @@ int main(int argc, char** argv) {
    puts("\n\t * Formula to build 256 bit result:\n\t *");
    printf("\nhihi: %llu, hilo: %llu, lohi: %llu, lolo: %llu\n\n", hihi, hilo,\
          tmp.mid, tmp.lo);
+   /* DO NOT INDENT the two continuation lines below.  This string is
+    * spliced across lines with a trailing backslash, so any leading
+    * whitespace on the continuation lines becomes part of the STRING and
+    * is printed.  They sit at column 0 on purpose, against the style of
+    * the rest of the file.
+    *
+    * Note that `git diff -w` cannot see a change of this kind -- it
+    * ignores whitespace inside string literals too.  If you reformat
+    * this function, verify by diffing the program's OUTPUT against the
+    * previous binary, not by reading the diff. */
    puts("\t *  -----  high 128 bits  ------      --- low 128 bits ---\
 \n\t * (((hihi << 64) + hilo) << 128)  +  (lohi << 64) + lolo\
 \n\t *");
