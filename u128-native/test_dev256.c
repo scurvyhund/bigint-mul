@@ -26,7 +26,7 @@ typedef struct u256 u256;
 char* u256_to_string(u256* tmp);
 void mul256b(u256 *x, u256 *y, u256 *tmp_struc_ptr);
 
-/* Helper: parse decimal string into u128 (same as your string_to_u128) */
+/* Helper: parse decimal string into u128 (same as dev256 string_to_u128) */
 static u128 str_to_u128(const char *s) {
     u128 v = 0;
     for (size_t i = 0; s[i]; ++i) v = v*10 + (s[i]-'0');
@@ -104,7 +104,7 @@ static char *expected_product_from_u128(u128 a, u128 b) {
     return buf;
 }
 
-/* small runner that builds u256 inputs like your main does and calls mul256b */
+/* small runner: builds u256 inputs like dev256.c main does, calls mul256b */
 static char *run_mul_and_get(u128 a, u128 b) {
     u64 a_lo = (u64)a; u64 a_mid = (u64)(a >> 64);
     u64 b_lo = (u64)b; u64 b_mid = (u64)(b >> 64);
